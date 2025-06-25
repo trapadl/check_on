@@ -272,9 +272,7 @@
         function generateDockets() {
             // All possible combinations of 2, 3, 4 that sum to 9
             const patterns = [
-                [3, 3, 3], // Original pattern
-                [2, 3, 4], [2, 4, 3], [3, 2, 4], 
-                [3, 4, 2], [4, 2, 3], [4, 3, 2]
+                [3, 3, 3] // Original pattern
             ];
             docketPattern = patterns[Math.floor(Math.random() * patterns.length)];
             
