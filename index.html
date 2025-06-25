@@ -202,7 +202,8 @@
     </div>
     
     <div class="setup-info">
-        <strong>Remember:</strong> You have 5 minutes to set up your station before the challenge begins. Dockets will be issued at 0:00, 2:00, and 4:00 minutes. Total challenge time: 6 minutes.
+        <strong>Remember:</strong> You have 5 minutes to set up your station before the challenge begins. Dockets will be issued at 0:00, 2:00, and 4:00 minutes. Total challenge time: 6 minutes.<br>
+        <strong>Possible patterns:</strong> 3-3-3, 2-3-4, 2-4-3, 3-2-4, 3-4-2, 4-2-3, 4-3-2
     </div>
     
     <div class="timer-display" id="timer">00:00</div>
@@ -269,8 +270,12 @@
         }
         
         function generateDockets() {
-            // Randomly choose between 3-3-3 or 2-3-4 pattern
-            const patterns = [[3, 3, 3], [2, 3, 4]];
+            // All possible combinations of 2, 3, 4 that sum to 9
+            const patterns = [
+                [3, 3, 3], // Original pattern
+                [2, 3, 4], [2, 4, 3], [3, 2, 4], 
+                [3, 4, 2], [4, 2, 3], [4, 3, 2]
+            ];
             docketPattern = patterns[Math.floor(Math.random() * patterns.length)];
             
             const shuffledCocktails = shuffleArray(cocktails);
