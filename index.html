@@ -7,73 +7,39 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 10px;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: white;
-            min-height: 100vh;
-            font-size: 14px;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-        
-        .header h1 {
-            color: #ff6b6b;
-            font-size: 2em;
-            margin-bottom: 5px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-        
-        .header p {
             margin: 0;
-            font-size: 0.9em;
+            padding: 0;
+            background: #1a1a2e;
+            color: white;
+            font-size: 12px;
         }
         
         .timer-display {
-            font-size: 2.5em;
+            font-size: 3em;
             font-weight: bold;
             text-align: center;
-            margin: 10px 0;
+            margin: 0;
+            padding: 10px 0;
             color: #4ecdc4;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.3);
         }
         
         .controls {
-            text-align: center;
-            margin: 15px 0;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 8px;
+            justify-content: space-between;
+            margin: 0;
+            padding: 5px;
+            gap: 2px;
         }
         
         .btn {
-            padding: 10px 15px;
-            font-size: 0.9em;
+            padding: 8px 12px;
+            font-size: 0.8em;
             border: none;
-            border-radius: 6px;
+            border-radius: 4px;
             cursor: pointer;
-            transition: all 0.3s ease;
             font-weight: bold;
             flex: 1;
-            min-width: 120px;
-            max-width: 180px;
-        }
-        
-        @media (max-width: 768px) {
-            .controls {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
-                width: 90%;
-                max-width: 300px;
-            }
         }
         
         .btn-start {
@@ -118,42 +84,36 @@
         
         .docket-container {
             display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            margin: 15px 0;
-            gap: 8px;
+            margin: 0;
+            padding: 5px;
+            gap: 2px;
         }
         
         .docket {
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 12px;
+            border-radius: 4px;
+            padding: 8px;
             flex: 1;
-            min-width: 150px;
-            max-width: 200px;
-            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             opacity: 0.3;
-            transform: translateY(10px);
-            transition: all 0.5s ease;
+            transition: opacity 0.3s ease;
         }
         
         .docket.active {
             opacity: 1;
-            transform: translateY(0);
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+            background: rgba(255, 107, 107, 0.2);
         }
         
         .docket h3 {
             color: #ff6b6b;
-            margin: 0 0 8px 0;
-            font-size: 1em;
+            margin: 0 0 4px 0;
+            font-size: 0.9em;
         }
         
         .docket-time {
-            font-size: 0.75em;
+            font-size: 0.7em;
             color: #4ecdc4;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
             font-weight: bold;
         }
         
@@ -164,9 +124,9 @@
         }
         
         .cocktail-list li {
-            padding: 4px 0;
+            padding: 2px 0;
+            font-size: 0.75em;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.85em;
         }
         
         .cocktail-list li:last-child {
@@ -175,10 +135,9 @@
         
         .status {
             text-align: center;
-            font-size: 1em;
-            margin: 15px 0;
-            padding: 10px;
-            border-radius: 6px;
+            font-size: 0.8em;
+            margin: 0;
+            padding: 5px;
             background: rgba(255, 255, 255, 0.1);
         }
         
@@ -203,11 +162,11 @@
         
         .results {
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 15px;
-            margin: 15px 0;
+            border-radius: 4px;
+            padding: 8px;
+            margin: 5px;
             display: none;
-            font-size: 0.9em;
+            font-size: 0.8em;
         }
         
         .results.show {
@@ -216,77 +175,75 @@
         
         .setup-info {
             background: rgba(78, 205, 196, 0.1);
-            border-radius: 6px;
-            padding: 10px;
-            margin: 15px 0;
-            border-left: 4px solid #4ecdc4;
-            font-size: 0.85em;
+            border-radius: 4px;
+            padding: 5px;
+            margin: 5px;
+            border-left: 3px solid #4ecdc4;
+            font-size: 0.7em;
         }
         
         @media (max-width: 768px) {
+            .timer-display {
+                font-size: 2.5em;
+            }
+            
+            .controls {
+                flex-wrap: wrap;
+            }
+            
+            .btn {
+                font-size: 0.7em;
+                padding: 6px 8px;
+            }
+            
             .docket-container {
                 flex-direction: column;
-                align-items: stretch;
             }
             
-            .docket {
-                max-width: none;
-                margin: 5px 0;
-            }
-            
-            .timer-display {
-                font-size: 2em;
-            }
-            
-            .header h1 {
-                font-size: 1.5em;
+            .cocktail-list li {
+                font-size: 0.8em;
             }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>CHECK ON!</h1>
-        <p>Diageo Reserve Brands Speed Challenge</p>
-    </div>
-    
-    <div class="setup-info">
-        <strong>Remember:</strong> You have 5 minutes to set up your station before the challenge begins. Dockets will be issued at 0:00, 2:00, and 4:00 minutes. Total challenge time: 6 minutes.
-    </div>
-    
     <div class="timer-display" id="timer">00:00</div>
     
     <div class="controls">
-        <button class="btn btn-start" id="startBtn" onclick="startChallenge()">START CHALLENGE</button>
-        <button class="btn btn-stop" id="stopBtn" onclick="stopChallenge()" disabled>STOP & REVIEW</button>
+        <button class="btn btn-start" id="startBtn" onclick="startChallenge()">START</button>
+        <button class="btn btn-stop" id="stopBtn" onclick="stopChallenge()" disabled>STOP</button>
         <button class="btn btn-reset" id="resetBtn" onclick="resetChallenge()">RESET</button>
-        <button class="btn btn-next" id="nextBtn" onclick="skipToNextDocket()" disabled>SKIP TO NEXT DOCKET</button>
+        <button class="btn btn-next" id="nextBtn" onclick="skipToNextDocket()" disabled>NEXT</button>
     </div>
-    
-    <div class="status" id="status">Ready to begin your Check On challenge!</div>
     
     <div class="docket-container" id="docketContainer">
         <div class="docket" id="docket1">
             <h3>DOCKET 1</h3>
-            <div class="docket-time">Issued at: 0:00</div>
+            <div class="docket-time">0:00</div>
             <ul class="cocktail-list" id="docket1-list"></ul>
         </div>
         
         <div class="docket" id="docket2">
             <h3>DOCKET 2</h3>
-            <div class="docket-time">Issued at: 2:00</div>
+            <div class="docket-time">2:00</div>
             <ul class="cocktail-list" id="docket2-list"></ul>
         </div>
         
         <div class="docket" id="docket3">
             <h3>DOCKET 3</h3>
-            <div class="docket-time">Issued at: 4:00</div>
+            <div class="docket-time">4:00</div>
             <ul class="cocktail-list" id="docket3-list"></ul>
         </div>
     </div>
     
+    <div class="status" id="status">Ready to begin</div>
+    
+    <div class="setup-info">
+        <strong>Setup:</strong> 5min | <strong>Challenge:</strong> 6min | <strong>Dockets:</strong> 0:00, 2:00, 4:00
+    </div>
+    
     <div class="results" id="results">
-        <h3>Challenge Results</h3>
+        <h3>Results</h3>
         <div id="resultsContent"></div>
     </div>
 
