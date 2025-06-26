@@ -127,6 +127,12 @@
             padding: 2px 0;
             font-size: 0.75em;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .cocktail-list li:hover {
+            background-color: rgba(255, 255, 255, 0.1);
         }
         
         .cocktail-list li:last-child {
@@ -180,6 +186,53 @@
             margin: 5px;
             border-left: 3px solid #4ecdc4;
             font-size: 0.7em;
+        }
+        
+        .recipe-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+        
+        .recipe-content {
+            background-color: #1a1a2e;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #4ecdc4;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: #fff;
+        }
+        
+        .recipe-title {
+            color: #ff6b6b;
+            margin: 0 0 15px 0;
+            font-size: 1.5em;
+        }
+        
+        .recipe-text {
+            white-space: pre-line;
+            font-size: 0.9em;
+            line-height: 1.4;
         }
         
         @media (max-width: 768px) {
@@ -239,22 +292,394 @@
     <div class="status" id="status">Ready to begin</div>
     
     <div class="setup-info">
-        <strong>Setup:</strong> 5min | <strong>Challenge:</strong> 6min | <strong>Dockets:</strong> 0:00, 2:00, 4:00
+        <strong>Setup:</strong> 5min | <strong>Challenge:</strong> 6min | <strong>Dockets:</strong> 0:00, 2:00, 4:00<br>
+        <strong>Tip:</strong> Click any cocktail name to see the recipe!
     </div>
     
     <div class="results" id="results">
         <h3>Results</h3>
         <div id="resultsContent"></div>
     </div>
+    
+    <!-- Recipe Modal -->
+    <div id="recipeModal" class="recipe-modal">
+        <div class="recipe-content">
+            <span class="close">&times;</span>
+            <h2 class="recipe-title" id="recipeTitle"></h2>
+            <div class="recipe-text" id="recipeText"></div>
+        </div>
+    </div>
 
     <script>
         const cocktails = [
-            "Airmail", "Batanga", "Blood & Sand", "Bobby Burns", "Chi Chi",
-            "Corpse Reviver No. 2", "Cosmopolitan", "El Diablo", "Espresso Martini",
-            "French 75", "Gin Basil Smash", "Jasmine", "Jungle Bird", "Last Word",
-            "London Calling", "Old Cuban", "Painkiller", "Paloma", "Rattlesnake",
-            "Revolver", "Rob Roy", "Russian Spring Punch", "Sea Breeze", "Southside",
-            "Tommy's Margarita", "Toreador", "Vesper Martini", "Whiskey Sour"
+            { 
+              name: "Airmail", 
+              recipe: `Ron Zacapa Centenario Rum 60 ml
+Lime Juice 15 ml
+Honey Syrup (1:1) 15 ml
+Sparkling Wine 60 ml
+
+Glass: Highball
+Method: Shake
+Strain Method: Strain
+Ice Type: Cubed ice
+Garnish: Lime wedge or twist` 
+            },
+            { 
+              name: "Batanga", 
+              recipe: `Don Julio Blanco Tequila 60 ml
+Lime Juice 15 ml
+Cola ≈ 120 ml (top)
+
+Glass: Highball
+Method: Build
+Strain Method: None
+Ice Type: Cubed ice
+Garnish: Lime wedge + knife` 
+            },
+            { 
+              name: "Blood & Sand", 
+              recipe: `Johnnie Walker Scotch Whisky 22.5 ml
+Sweet Vermouth 22.5 ml
+Cherry Heering 22.5 ml
+Orange Juice 22.5 ml
+
+Glass: Coupe
+Method: Shake
+Strain Method: Fine strain
+Ice Type: No ice
+Garnish: Orange twist` 
+            },
+            { 
+              name: "Bobby Burns", 
+              recipe: `Johnnie Walker Scotch Whisky 45 ml
+Sweet Vermouth 20 ml
+D.O.M. Benedictine 5 ml
+Absinthe rinse
+Aromatic Bitters dash
+
+Glass: Coupe
+Method: Stir
+Strain Method: Julep strain
+Ice Type: No ice
+Garnish: Lemon twist` 
+            },
+            { 
+              name: "Chi Chi", 
+              recipe: `Ketel One Vodka 60 ml
+Pineapple Juice 90 ml
+Coconut Cream 30 ml
+
+Glass: Highball
+Method: Shake
+Strain Method: Dirty dump
+Ice Type: Crushed
+Garnish: Pineapple wedge` 
+            },
+            { 
+              name: "Corpse Reviver No. 2", 
+              recipe: `Tanqueray No. Ten Gin 22.5 ml
+Orange Liqueur 22.5 ml
+Lillet Blanc 22.5 ml
+Lemon Juice 22.5 ml
+Sugar Syrup 5 ml
+Absinthe rinse
+
+Glass: Coupe
+Method: Shake
+Strain Method: Fine strain
+Ice Type: No ice
+Garnish: Lemon twist` 
+            },
+            { 
+              name: "Cosmopolitan", 
+              recipe: `Ketel One Vodka 45 ml
+Cranberry Juice 30 ml
+Lime Juice 15 ml
+Orange Liqueur 15 ml
+
+Glass: Coupe
+Method: Shake
+Strain Method: Fine strain
+Ice Type: No ice
+Garnish: Flamed orange twist` 
+            },
+            { 
+              name: "El Diablo", 
+              recipe: `Don Julio Blanco Tequila 45 ml
+Crème de Cassis 15 ml
+Lime Juice 15 ml
+Ginger Beer ≈ 90 ml (top)
+
+Glass: Highball
+Method: Shake
+Strain Method: Strain
+Ice Type: Cubed ice
+Garnish: Lime wedge` 
+            },
+            { 
+              name: "Espresso Martini", 
+              recipe: `Mr Black Coffee Liqueur 30 ml
+Ketel One Vodka 30 ml
+Cold-Brew Coffee 30 ml
+
+Glass: Coupe
+Method: Shake
+Strain Method: Fine strain
+Ice Type: No ice
+Garnish: Coffee beans (3)` 
+            },
+            { 
+              name: "French 75", 
+              recipe: `Tanqueray No. Ten Gin 30 ml
+Lemon Juice 15 ml
+Sugar Syrup 10 ml
+Sparkling Wine 60 ml
+
+Glass: Coupe
+Method: Shake
+Strain Method: Fine strain
+Ice Type: No ice (top with sparkling)
+Garnish: Lemon twist` 
+            },
+            { 
+              name: "Gin Basil Smash", 
+              recipe: `Tanqueray No. Ten Gin 60 ml
+Lemon Juice 30 ml
+Sugar Syrup 15 ml
+Basil Leaves (~10 leaves)
+
+Glass: Rocks
+Method: Shake
+Strain Method: Fine strain
+Ice Type: Cubed ice
+Garnish: Basil sprig or leaf` 
+            },
+            { 
+              name: "Jasmine", 
+              recipe: `Tanqueray No. Ten Gin 45 ml
+Campari 15 ml
+Orange Liqueur 7.5 ml
+Lemon Juice 15 ml
+
+Glass: Coupe
+Method: Shake
+Strain Method: Fine strain
+Ice Type: No ice
+Garnish: Lemon twist` 
+            },
+            { 
+              name: "Jungle Bird", 
+              recipe: `Ron Zacapa Centenario Rum 45 ml
+Campari 15 ml
+Pineapple Juice 45 ml
+Lime Juice 15 ml
+Sugar Syrup 7.5 ml
+
+Glass: Rocks
+Method: Shake
+Strain Method: Strain
+Ice Type: Cubed ice
+Garnish: Pineapple wedge` 
+            },
+            { 
+              name: "Last Word", 
+              recipe: `Tanqueray No. Ten Gin 22.5 ml
+Green Chartreuse 22.5 ml
+Maraschino Liqueur 22.5 ml
+Lime Juice 22.5 ml
+
+Glass: Coupe
+Method: Shake
+Strain Method: Fine strain
+Ice Type: No ice
+Garnish: Lime twist or cherry` 
+            },
+            { 
+              name: "London Calling", 
+              recipe: `Tanqueray No. Ten Gin 40 ml
+Fino Sherry 15 ml
+Lemon Juice 20 ml
+Sugar Syrup 10 ml
+Orange Bitters dash
+
+Glass: Coupe
+Method: Shake
+Strain Method: Fine strain
+Ice Type: No ice
+Garnish: Orange twist` 
+            },
+            { 
+              name: "Old Cuban", 
+              recipe: `Ron Zacapa Centenario Rum 45 ml
+Lime Juice 22.5 ml
+Sugar Syrup 22.5 ml
+Mint Leaves (~6 leaves)
+Sparkling Wine 60 ml
+
+Glass: Coupe
+Method: Shake
+Strain Method: Fine strain
+Ice Type: No ice (top with sparkling)
+Garnish: Mint sprig` 
+            },
+            { 
+              name: "Painkiller", 
+              recipe: `Ron Zacapa Centenario Rum 60 ml
+Pineapple Juice 90 ml
+Orange Juice 30 ml
+Lime Juice 15 ml
+Coconut Cream 30 ml
+
+Glass: Highball
+Method: Shake
+Strain Method: Dirty dump
+Ice Type: Crushed or cubed ice
+Garnish: Pineapple wedge` 
+            },
+            { 
+              name: "Paloma", 
+              recipe: `Don Julio Blanco Tequila 60 ml
+Grapefruit Juice 90 ml
+Lime Juice 15 ml
+Agave Syrup 15 ml
+Soda ≈ 60 ml (top)
+
+Glass: Highball
+Method: Build
+Strain Method: None
+Ice Type: Cubed ice
+Garnish: Grapefruit wedge` 
+            },
+            { 
+              name: "Rattlesnake", 
+              recipe: `Bulleit Rye Whiskey 60 ml
+Lemon Juice 30 ml
+Sugar Syrup 20 ml
+Absinthe rinse
+Egg White (~25 ml)
+
+Glass: Coupe
+Method: Shake
+Strain Method: Fine strain
+Ice Type: No ice
+Garnish: Angostura bitters` 
+            },
+            { 
+              name: "Revolver", 
+              recipe: `Bulleit Bourbon 60 ml
+Mr Black Coffee Liqueur 30 ml
+Orange Bitters dash
+
+Glass: Coupe
+Method: Stir
+Strain Method: Julep strain
+Ice Type: No ice
+Garnish: Orange twist` 
+            },
+            { 
+              name: "Rob Roy", 
+              recipe: `Johnnie Walker Black Label 60 ml
+Sweet Vermouth 30 ml
+Aromatic Bitters dash
+
+Glass: Coupe
+Method: Stir
+Strain Method: Julep strain
+Ice Type: No ice
+Garnish: Cherry or orange twist` 
+            },
+            { 
+              name: "Russian Spring Punch", 
+              recipe: `Ketel One Vodka 25 ml
+Strawberry Liqueur 10 ml
+Crème de Cassis 10 ml
+Lemon Juice 25 ml
+Sugar Syrup 10 ml
+Sparkling Wine 60 ml
+
+Glass: Highball
+Method: Shake
+Strain Method: Strain
+Ice Type: Cubed ice
+Garnish: Lemon twist or berry` 
+            },
+            { 
+              name: "Sea Breeze", 
+              recipe: `Ketel One Vodka 45 ml
+Grapefruit Juice 45 ml
+Cranberry Juice 90 ml
+
+Glass: Highball
+Method: Build
+Strain Method: None
+Ice Type: Cubed ice
+Garnish: Lime wedge` 
+            },
+            { 
+              name: "Southside", 
+              recipe: `Tanqueray No. Ten Gin 60 ml
+Lime Juice 30 ml
+Sugar Syrup 15 ml
+Mint Leaves (~10 leaves)
+
+Glass: Coupe
+Method: Shake
+Strain Method: Fine strain
+Ice Type: No ice
+Garnish: Mint sprig` 
+            },
+            { 
+              name: "Tommy's Margarita", 
+              recipe: `Don Julio Blanco Tequila 60 ml
+Lime Juice 30 ml
+Agave Syrup 15 ml
+
+Glass: Rocks
+Method: Shake
+Strain Method: Strain
+Ice Type: Cubed ice
+Garnish: Lime wedge` 
+            },
+            { 
+              name: "Toreador", 
+              recipe: `Don Julio Blanco Tequila 45 ml
+Apricot Brandy 30 ml
+Lime Juice 15 ml
+Bitters dash
+
+Glass: Coupe
+Method: Shake
+Strain Method: Fine strain
+Ice Type: No ice
+Garnish: Lime twist` 
+            },
+            { 
+              name: "Vesper Martini", 
+              recipe: `Tanqueray No. Ten Gin 60 ml
+Ketel One Vodka 20 ml
+Dry Vermouth 10 ml
+
+Glass: Coupe
+Method: Stir
+Strain Method: Julep strain
+Ice Type: No ice
+Garnish: Lemon twist` 
+            },
+            { 
+              name: "Whisk(e)y Sour", 
+              recipe: `Johnnie Walker Black Label or Bulleit Bourbon 60 ml
+Lemon Juice 30 ml
+Sugar Syrup 20 ml
+Egg White (~25 ml)
+(Bitters optional — dash)
+
+Glass: Rocks
+Method: Shake
+Strain Method: Fine strain
+Ice Type: Cubed ice
+Garnish: Orange twist + ango` 
+            }
         ];
         
         let timer = null;
@@ -263,7 +688,7 @@
         let isRunning = false;
         let currentDockets = [];
         let docketPattern = [];
-        let nextDocketIndex = 1; // Track which docket to issue next
+        let nextDocketIndex = 1;
         
         function shuffleArray(array) {
             const shuffled = [...array];
@@ -275,7 +700,6 @@
         }
         
         function generateDockets() {
-            // Only use 3-3-3 pattern for consistency
             docketPattern = [3, 3, 3];
             
             const shuffledCocktails = shuffleArray(cocktails);
@@ -304,17 +728,16 @@
                 elapsedTime = Math.floor((Date.now() - startTime) / 1000);
                 document.getElementById('timer').textContent = formatTime(elapsedTime);
                 
-                // Issue dockets at appropriate times
                 if (elapsedTime === 0 && nextDocketIndex === 1) {
                     issueDocket(1);
                     nextDocketIndex = 2;
-                } else if (elapsedTime === 120 && nextDocketIndex === 2) { // 2:00
+                } else if (elapsedTime === 120 && nextDocketIndex === 2) {
                     issueDocket(2);
                     nextDocketIndex = 3;
-                } else if (elapsedTime === 240 && nextDocketIndex === 3) { // 4:00
+                } else if (elapsedTime === 240 && nextDocketIndex === 3) {
                     issueDocket(3);
                     nextDocketIndex = 4;
-                } else if (elapsedTime >= 360) { // 6:00 - time's up!
+                } else if (elapsedTime >= 360) {
                     stopChallenge();
                     return;
                 }
@@ -327,23 +750,30 @@
             const docket = document.getElementById(`docket${docketNumber}`);
             const list = document.getElementById(`docket${docketNumber}-list`);
             
-            // Clear existing items
             list.innerHTML = '';
             
-            // Add cocktails to the docket
             currentDockets[docketNumber - 1].forEach(cocktail => {
                 const li = document.createElement('li');
-                li.textContent = cocktail;
+                li.textContent = cocktail.name;
+                li.addEventListener('click', () => showRecipe(cocktail));
                 list.appendChild(li);
             });
             
-            // Activate the docket
             docket.classList.add('active');
             
-            // Update status
             const status = document.getElementById('status');
             status.textContent = `DOCKET ${docketNumber} ISSUED! (${currentDockets[docketNumber - 1].length} drinks)`;
             status.className = 'status running';
+        }
+        
+        function showRecipe(cocktail) {
+            document.getElementById('recipeTitle').textContent = cocktail.name;
+            document.getElementById('recipeText').textContent = cocktail.recipe;
+            document.getElementById('recipeModal').style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('recipeModal').style.display = 'none';
         }
         
         function startChallenge() {
@@ -359,13 +789,11 @@
             document.getElementById('resetBtn').disabled = true;
             document.getElementById('nextBtn').disabled = false;
             
-            // Reset dockets
             for (let i = 1; i <= 3; i++) {
                 document.getElementById(`docket${i}`).classList.remove('active');
                 document.getElementById(`docket${i}-list`).innerHTML = '';
             }
             
-            // Hide results
             document.getElementById('results').classList.remove('show');
             
             const status = document.getElementById('status');
@@ -380,7 +808,6 @@
                 issueDocket(nextDocketIndex);
                 nextDocketIndex++;
                 
-                // Update button state
                 if (nextDocketIndex > 3) {
                     document.getElementById('nextBtn').disabled = true;
                 }
@@ -420,17 +847,15 @@
             document.getElementById('resetBtn').disabled = false;
             document.getElementById('nextBtn').disabled = true;
             
-            // Reset dockets
             for (let i = 1; i <= 3; i++) {
                 document.getElementById(`docket${i}`).classList.remove('active');
                 document.getElementById(`docket${i}-list`).innerHTML = '';
             }
             
-            // Hide results
             document.getElementById('results').classList.remove('show');
             
             const status = document.getElementById('status');
-            status.textContent = 'Ready to begin your Check On challenge!';
+            status.textContent = 'Ready to begin';
             status.className = 'status waiting';
         }
         
@@ -448,7 +873,7 @@
             for (let i = 0; i < currentDockets.length; i++) {
                 resultsHTML += `
                     <p><strong>Docket ${i + 1} (${currentDockets[i].length} drinks):</strong><br>
-                    ${currentDockets[i].join(', ')}</p>
+                    ${currentDockets[i].map(cocktail => cocktail.name).join(', ')}</p>
                 `;
             }
             
@@ -459,6 +884,16 @@
             
             document.getElementById('resultsContent').innerHTML = resultsHTML;
             document.getElementById('results').classList.add('show');
+        }
+        
+        // Modal event listeners
+        document.getElementsByClassName('close')[0].onclick = closeModal;
+        
+        window.onclick = function(event) {
+            const modal = document.getElementById('recipeModal');
+            if (event.target == modal) {
+                closeModal();
+            }
         }
     </script>
 </body>
