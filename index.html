@@ -293,6 +293,7 @@
     
     <div class="setup-info">
         <strong>Setup:</strong> 5min | <strong>Challenge:</strong> 6min | <strong>Dockets:</strong> 0:00, 2:00, 4:00<br>
+        <strong>Patterns:</strong> 3-3-3, 3-4-2, 3-5-1, 4-2-3, 4-3-2, 4-4-1, 5-2-2, 5-3-1, 6-1-2, 6-2-1<br>
         <strong>Tip:</strong> Click any cocktail name to see the recipe!
     </div>
     
@@ -700,7 +701,20 @@ Garnish: Orange twist + ango`
         }
         
         function generateDockets() {
-            docketPattern = [3, 3, 3];
+            // Patterns where first number ≥3, sum=9, no zeros, and avg of first 2 numbers ≥3 (excluding 7-1-1)
+            const patterns = [
+                [3, 3, 3], // Balanced
+                [3, 4, 2], // Light start, heavy middle, light finish
+                [3, 5, 1], // Light start, very heavy middle, minimal finish
+                [4, 2, 3], // Heavy start, light middle, moderate finish
+                [4, 3, 2], // Heavy start, moderate middle, light finish
+                [4, 4, 1], // Heavy start, heavy middle, minimal finish
+                [5, 2, 2], // Very heavy start, light remainder
+                [5, 3, 1], // Very heavy start, moderate middle, minimal finish
+                [6, 1, 2], // Extremely heavy start, minimal middle, light finish
+                [6, 2, 1]  // Extremely heavy start, light middle, minimal finish
+            ];
+            docketPattern = patterns[Math.floor(Math.random() * patterns.length)];
             
             const shuffledCocktails = shuffleArray(cocktails);
             currentDockets = [];
